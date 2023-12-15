@@ -1,43 +1,26 @@
 // Add imports above this line
-import { galleryItems } from './gallery-items.js';
-// Change code below this line
+import {galleryItems} from "./gallery-items";
+// Descris în documentație
 import SimpleLightbox from "simplelightbox";
 // Import suplimentar de stil
 import "simplelightbox/dist/simple-lightbox.min.css";
-document.addEventListener('DOMContentLoaded', function () {
-   
-     const galleryContainer = document.querySelector('.gallery');
-     console.log(galleryItems);
-     function renderGallery() {
-     galleryItems.forEach(item => {
-     const listItem = document.createElement('li');
-     listItem.classList.add('gallery__item');
 
-     const link = document.createElement('a');
-     link.classList.add('gallery__link');
-     link.href = item.preview;
+const galleryContainer = document.querySelector('div.gallery');
+const photosMarkup = createGalleryItems(galleryItems);
 
-     const img = document.createElement('img');
-     img.classList.add('gallery__image');
-     img.src = item.original;
-     img.alt = 'Image description';
-     img.setAttribute('data-source', item.preview);
-
-     link.appendChild(img);
-     listItem.appendChild(link);
-     gallery.appendChild(listItem);
-    });
-  }
-
-  renderGallery();
-    
-  
-      const lightbox = new SimpleLightbox('.gallery a');
-
-     gallery.addEventListener('click', function (event) {
-        event.preventDefault();
-        if (event.target.nodeName === 'IMG') {
-           
-        }
-    });
+function createGalleryItems(element) {
+    return element
+    .map(({ preview, original, description }) => {
+        return `
+        <a class="gallery__item" href="${original}" >
+        <img class="gallery__image" src="${preview}" alt="${description}" />
+         </a>`;
+    })
+    .join("");
+}
+galleryContainer.insertAdjacentHTML('beforeend', photosMarkup);
+const galleryHandler = new SimpleLightbox(".gallery a", {
+    captionData:'alt',
+    captionDelay: 250
 });
+galleryHandler.on('show.simplelightbox');
